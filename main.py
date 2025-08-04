@@ -11,6 +11,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from dotenv import load_dotenv
 
 from app.api.conversation import router as conversation_router
+from app.api.mcp import router as mcp_router
 from app.services.multi_model_service import MultiModelService
 
 # Load environment variables
@@ -90,6 +91,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(conversation_router)
+app.include_router(mcp_router)
 
 
 @app.get("/health")
