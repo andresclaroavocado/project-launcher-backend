@@ -106,12 +106,27 @@ async def health_check():
     global multi_model_service
     
     try:
-        model_status = "configured" if multi_model_service and multi_model_service.api_key and multi_model_service.api_key != "your-claude-api-key-here" else "missing"
+        import os
+        
+        # Check environment variables
+        anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+        goose_key = os.getenv('GOOSE_AI_API_KEY')
+        
+        # Check service status
+        service_status = "initialized" if multi_model_service else "not initialized"
+        
+        # Check API key status
+        anthropic_status = "configured" if anthropic_key else "missing"
+        goose_status = "configured" if goose_key else "missing"
         
         return {
             "status": "healthy",
-            "api_key_status": model_status,
-            "message": "API is ready" if model_status == "configured" else "API key needed"
+            "service_status": service_status,
+            "api_keys": {
+                "anthropic": anthropic_status,
+                "goose_ai": goose_status
+            },
+            "message": "API is ready" if (anthropic_key or goose_key) else "API keys needed"
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")

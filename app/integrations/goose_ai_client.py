@@ -28,11 +28,17 @@ class GooseAIClient:
         
         # Configure OpenAI client for GooseAI
         if self.available:
-            self.client = OpenAI(
-                api_key=self.api_key,
-                base_url=self.base_url
-            )
-            logger.info("GooseAI client initialized successfully", api_key_length=len(self.api_key) if self.api_key else 0)
+            try:
+                self.client = OpenAI(
+                    api_key=self.api_key,
+                    base_url=self.base_url,
+                    http_client=None  # Let OpenAI create its own client without proxies
+                )
+                logger.info("GooseAI client initialized successfully", api_key_length=len(self.api_key) if self.api_key else 0)
+            except Exception as e:
+                logger.error(f"Failed to initialize GooseAI client: {e}")
+                self.client = None
+                self.available = False
         else:
             self.client = None
             logger.warning("GooseAI client not available - missing API key")
