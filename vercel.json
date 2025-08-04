@@ -1,28 +1,18 @@
 {
   "version": 2,
-  "functions": {
-    "api/conversation/start.py": {
-      "runtime": "python3.11"
-    },
-    "api/conversation/continue.py": {
-      "runtime": "python3.11"
-    },
-    "api/models/status.py": {
-      "runtime": "python3.11"
-    },
-    "api/models/performance.py": {
-      "runtime": "python3.11"
-    },
-    "api/health.py": {
-      "runtime": "python3.11"
+  "builds": [
+    {
+      "src": "main.py",
+      "use": "@vercel/python"
     }
-  },
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "main.py"
+    }
+  ],
   "env": {
     "PYTHONPATH": "."
-  },
-  "build": {
-    "env": {
-      "PYTHONPATH": "."
-    }
   }
 } 
