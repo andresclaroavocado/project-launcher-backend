@@ -23,6 +23,8 @@ class ConversationService:
     async def start_conversation(self, project_idea: str) -> Dict[str, Any]:
         """Start a natural conversation about the project"""
         conversation_id = str(uuid.uuid4())
+
+        logger.info(f"Starting conversation for project idea: {project_idea}")
         
         # Create conversation
         conversation = {
@@ -33,6 +35,8 @@ class ConversationService:
             "last_activity": datetime.utcnow().isoformat(),
             "phase": "conversation"
         }
+
+        logger.info(f"Conversation created: {conversation}")
         
         # Let AI respond naturally to the project idea
         initial_response = await self.multi_model_service.generate_conversation_response(
@@ -40,12 +44,16 @@ class ConversationService:
 
 Respond naturally and helpfully. Understand their project and be ready to help them with documentation when they ask for it."""
         )
+
+        logger.info(f"Initial response: {initial_response}")
         
         # Add messages
         conversation["messages"].extend([
             {"role": "user", "content": project_idea, "timestamp": datetime.utcnow().isoformat()},
             {"role": "assistant", "content": initial_response, "timestamp": datetime.utcnow().isoformat()}
         ])
+
+        logger.info(f"Messages added: {conversation['messages']}")
         
         # Store conversation
         self.conversations[conversation_id] = conversation
